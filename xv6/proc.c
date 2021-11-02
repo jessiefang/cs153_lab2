@@ -112,6 +112,8 @@ found:
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
 
+  //default initial priority is 10
+  p->priority = 10;
   return p;
 }
 
@@ -311,6 +313,20 @@ wait(void)
   }
 }
 
+//Lab2
+//Set priority to a process
+void setPriority(int priority){
+  struct proc *p = myproc();
+  if(priority < 0){
+    p->priority = 0;
+  }else if(priority >31){
+    p->priority = 31
+  }else{
+    p->priority = priority;
+    yield();
+  }
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -325,7 +341,7 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
-  
+  int highest_pri = 31;
   for(;;){
     // Enable interrupts on this processor.
     sti();
@@ -335,6 +351,24 @@ scheduler(void)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+      if(highest_pri > p->priority){
+        highest_pri = p->priority;
+      }
+    }
+
+    // Loop over process table again to find the matching process which has the highest priority
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE)
+        continue;
+      
+      // If the process does not have the highest priority, increase its priority
+      if(p->priority != highest_pri){
+          if (p->priority > 0) {
+              p->priority--;
+          }
+          continue;
+    }
+
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -342,6 +376,10 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+
+      //Decrease its priority after running
+      p->priority++;
+
 
       swtch(&(c->scheduler), p->context);
       switchkvm();

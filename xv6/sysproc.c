@@ -21,6 +21,15 @@ sys_exit(void)
 }
 
 int
+sys_setPriority(void)
+{
+  int priority;
+  argint(0, &priority);
+  setPriority(priority);
+  return 0;
+}
+
+int
 sys_wait(void)
 {
   return wait();

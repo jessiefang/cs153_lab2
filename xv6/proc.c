@@ -320,7 +320,7 @@ void setPriority(int priority){
   if(priority < 0){
     p->priority = 0;
   }else if(priority >31){
-    p->priority = 31
+    p->priority = 31;
   }else{
     p->priority = priority;
     yield();

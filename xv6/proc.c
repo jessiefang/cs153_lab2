@@ -361,7 +361,8 @@ scheduler(void)
       if(p->state != RUNNABLE)
         continue;
       
-      // If the process does not have the highest priority, increase its priority
+      //Implemant aging
+      // If a process waits, increase its priority
       if(p->priority != highest_pri){
           if (p->priority > 0) {
               p->priority--;
@@ -376,7 +377,8 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
-
+      
+      //Implement aging
       //Decrease its priority after running
       p->priority++;
 

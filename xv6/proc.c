@@ -349,8 +349,9 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
-  int highest_pri = 31;
+  //int highest_pri = 31;
   for(;;){
+    int highest_pri= 31;
     // Enable interrupts on this processor.
     sti();
 

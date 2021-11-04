@@ -30,6 +30,12 @@ sys_setPriority(void)
 }
 
 int
+sys_getPriority(void)
+{
+    return getPriority();
+}
+
+int
 sys_wait(void)
 {
   return wait();

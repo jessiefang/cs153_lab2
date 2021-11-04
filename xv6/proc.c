@@ -327,6 +327,14 @@ void setPriority(int priority){
   }
 }
 
+//Get the priority of a process
+int
+getPriority()
+{
+    struct proc *curproc = myproc();
+    return curproc->priority;
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -356,11 +364,13 @@ scheduler(void)
       }
     }
 
+    
     // Loop over process table again to find the matching process which has the highest priority
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
       
+    
       //Implemant aging
       // If a process waits, increase its priority
       if(p->priority != highest_pri){
@@ -368,7 +378,10 @@ scheduler(void)
               p->priority--;
           }
           continue;
+    
     }
+    
+
 
 
       // Switch to chosen process.  It is the process's job
